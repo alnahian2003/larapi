@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 // My Very First API Route in Laravel 9
 Route::apiResource('products', ProductController::class);
 
+Route::get('products/search/{name}', [ProductController::class, 'search']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

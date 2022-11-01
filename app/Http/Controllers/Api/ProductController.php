@@ -28,7 +28,6 @@ class ProductController extends Controller
     {
         $validate = $request->validate([
             'name' => 'required|max:255',
-            'slug' => 'required',
             'description' => 'sometimes|max:500',
             'price' => 'required'
         ]);
@@ -56,7 +55,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $allowed = $request->only('name', 'slug', 'description', 'price');
+        $allowed = $request->only('name', 'description', 'price');
 
         if ($product->update($allowed)) {
             return $product;
@@ -74,5 +73,16 @@ class ProductController extends Controller
         if ($product->delete()) {
             return response()->json(['message' => 'Product Deleted Successfully!']);
         }
+    }
+
+    /**
+     * Search for a resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function search($name)
+    {
+        return Product::where('name', 'like', "%$name%")->get();
     }
 }
