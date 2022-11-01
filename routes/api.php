@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 // My Very First API Route in Laravel 9
 Route::apiResource('products', ProductController::class);
 
+// Public Routes - Index & Search
 Route::get('products/search/{name}', [ProductController::class, 'search']);
 
 

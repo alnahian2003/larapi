@@ -8,6 +8,14 @@ use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'search']);
+    }
+
+
+
     /**
      * Display a listing of the resource.
      *
