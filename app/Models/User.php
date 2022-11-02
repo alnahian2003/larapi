@@ -41,4 +41,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Auto encrypt user password
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            return $user->password = bcrypt($user->password);
+        });
+
+        static::updating(function ($user) {
+            return $user->slug = str()->slug($user->name);
+        });
+    }
 }
