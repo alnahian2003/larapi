@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -18,7 +19,34 @@ class AuthController extends Controller
 
         $user = User::create($validated);
 
-        $token = $user->createToken('myapptoken')->plainTextToken;
+        $token = $user->createToken($user->name)->plainTextToken;
+
+
+        $response = [
+            'user' => $user,
+            'token' => $token,
+        ];
+
+        return response($response, 201);
+    }
+
+    public function login(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string',
+        ]);
+
+        // Check Email
+        $user = User::where("email", $validated['email'])->first();
+
+        // Check for password
+        if (!$user || !Hash::check($validated['password'], $user->password)) {
+            return response(['message' => "Credentials doesn't match our record"], 401);
+        }
+
+        // Create token
+        $token = $user->createToken($user->name)->plainTextToken;
 
 
         $response = [
